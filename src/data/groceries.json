@@ -1,0 +1,49 @@
+{
+  "stores": [
+    {
+      "id": "costco",
+      "name": "Costco",
+      "color": "#E31837",
+      "icon": "🏪",
+      "items": [
+        { "id": "c1", "name": "Paper Towels", "quantity": 1, "unit": "pack", "category": "Household", "checked": false, "notes": "Kirkland 12-roll" },
+        { "id": "c2", "name": "Ground Beef", "quantity": 1, "unit": "pack", "category": "Meat", "checked": false, "notes": "6 lb pack" },
+        { "id": "c3", "name": "Dish Detergent", "quantity": 1, "unit": "bottle", "category": "Household", "checked": false, "notes": "Kirkland Platinum" },
+        { "id": "c4", "name": "Toilet Paper", "quantity": 1, "unit": "pack", "category": "Household", "checked": false, "notes": "Kirkland 30-roll" },
+        { "id": "c5", "name": "Protein Bars", "quantity": 1, "unit": "box", "category": "Snacks", "checked": false, "notes": "Kirkland variety pack" },
+        { "id": "c6", "name": "Uncrustables", "quantity": 2, "unit": "box", "category": "Frozen", "checked": false, "notes": "PB&J 18-count" },
+        { "id": "c7", "name": "Protein Smoothie Drinks", "quantity": 1, "unit": "case", "category": "Beverages", "checked": false, "notes": "Chobani 12-count" }
+      ]
+    },
+    {
+      "id": "grocery",
+      "name": "Grocery Store",
+      "color": "#2D8C3C",
+      "icon": "🛒",
+      "items": [
+        { "id": "g1", "name": "Milk", "quantity": 1, "unit": "gallon", "category": "Dairy", "checked": false, "notes": "Whole milk" },
+        { "id": "g2", "name": "Eggs", "quantity": 1, "unit": "dozen", "category": "Dairy", "checked": false, "notes": "" },
+        { "id": "g3", "name": "Bread", "quantity": 1, "unit": "loaf", "category": "Bakery", "checked": false, "notes": "Whole wheat" },
+        { "id": "g4", "name": "Bananas", "quantity": 1, "unit": "bunch", "category": "Produce", "checked": false, "notes": "" },
+        { "id": "g5", "name": "Apples", "quantity": 6, "unit": "ct", "category": "Produce", "checked": false, "notes": "Honeycrisp" },
+        { "id": "g6", "name": "Chicken Breast", "quantity": 2, "unit": "lb", "category": "Meat", "checked": false, "notes": "Boneless skinless" },
+        { "id": "g7", "name": "Rice", "quantity": 1, "unit": "bag", "category": "Pantry", "checked": false, "notes": "Jasmine 5 lb" },
+        { "id": "g8", "name": "Pasta", "quantity": 2, "unit": "box", "category": "Pantry", "checked": false, "notes": "Penne" },
+        { "id": "g9", "name": "Pasta Sauce", "quantity": 1, "unit": "jar", "category": "Pantry", "checked": false, "notes": "Marinara" },
+        { "id": "g10", "name": "Butter", "quantity": 1, "unit": "stick pack", "category": "Dairy", "checked": false, "notes": "Unsalted" },
+        { "id": "g11", "name": "Cheese", "quantity": 1, "unit": "block", "category": "Dairy", "checked": false, "notes": "Cheddar" },
+        { "id": "g12", "name": "Yogurt", "quantity": 6, "unit": "ct", "category": "Dairy", "checked": false, "notes": "Greek, variety" },
+        { "id": "g13", "name": "Broccoli", "quantity": 2, "unit": "head", "category": "Produce", "checked": false, "notes": "" },
+        { "id": "g14", "name": "Carrots", "quantity": 1, "unit": "bag", "category": "Produce", "checked": false, "notes": "Baby carrots" },
+        { "id": "g15", "name": "Onions", "quantity": 1, "unit": "bag", "category": "Produce", "checked": false, "notes": "Yellow" },
+        { "id": "g16", "name": "Garlic", "quantity": 1, "unit": "head", "category": "Produce", "checked": false, "notes": "" },
+        { "id": "g17", "name": "Cereal", "quantity": 1, "unit": "box", "category": "Pantry", "checked": false, "notes": "" },
+        { "id": "g18", "name": "Peanut Butter", "quantity": 1, "unit": "jar", "category": "Pantry", "checked": false, "notes": "Creamy" },
+        { "id": "g19", "name": "Jelly", "quantity": 1, "unit": "jar", "category": "Pantry", "checked": false, "notes": "Grape" },
+        { "id": "g20", "name": "Goldfish Crackers", "quantity": 1, "unit": "bag", "category": "Snacks", "checked": false, "notes": "" },
+        { "id": "g21", "name": "Juice Boxes", "quantity": 1, "unit": "pack", "category": "Beverages", "checked": false, "notes": "Apple juice" },
+        { "id": "g22", "name": "Frozen Veggies", "quantity": 2, "unit": "bag", "category": "Frozen", "checked": false, "notes": "Mixed vegetables" }
+      ]
+    }
+  ]
+}
