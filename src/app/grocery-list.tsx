@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 
 interface Item {
   id: string;
@@ -18,6 +18,130 @@ interface Store {
   color: string;
   icon: string;
   items: Item[];
+}
+
+function SwipeableItem({
+  item,
+  storeColor,
+  onToggle,
+  onDelete,
+}: {
+  item: Item;
+  storeColor: string;
+  onToggle: () => void;
+  onDelete: () => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const startX = useRef(0);
+  const currentX = useRef(0);
+  const isDragging = useRef(false);
+  const [offset, setOffset] = useState(0);
+  const [removing, setRemoving] = useState(false);
+  const deleteThreshold = -80;
+
+  const handleStart = useCallback((clientX: number) => {
+    startX.current = clientX;
+    currentX.current = clientX;
+    isDragging.current = false;
+  }, []);
+
+  const handleMove = useCallback((clientX: number) => {
+    const diff = clientX - startX.current;
+    if (Math.abs(diff) > 5) isDragging.current = true;
+    const clamped = Math.min(0, Math.max(-120, diff));
+    currentX.current = clientX;
+    setOffset(clamped);
+  }, []);
+
+  const handleEnd = useCallback(() => {
+    if (offset < deleteThreshold) {
+      setRemoving(true);
+      setOffset(-400);
+      setTimeout(onDelete, 250);
+    } else {
+      setOffset(0);
+    }
+  }, [offset, onDelete]);
+
+  const handleClick = useCallback(() => {
+    if (!isDragging.current) onToggle();
+  }, [onToggle]);
+
+  return (
+    <div className="relative overflow-hidden" ref={containerRef}>
+      <div
+        className="absolute inset-y-0 right-0 flex items-center justify-end px-4 bg-red-500"
+        style={{ width: 120 }}
+      >
+        <span className="text-white text-sm font-semibold">Delete</span>
+      </div>
+      <div
+        className={`relative bg-white dark:bg-zinc-800 cursor-pointer select-none flex items-center gap-3 px-4 py-3 ${removing ? "transition-transform duration-200" : offset === 0 ? "transition-transform duration-150" : ""}`}
+        style={{ transform: `translateX(${offset}px)` }}
+        onTouchStart={(e) => handleStart(e.touches[0].clientX)}
+        onTouchMove={(e) => handleMove(e.touches[0].clientX)}
+        onTouchEnd={handleEnd}
+        onMouseDown={(e) => {
+          handleStart(e.clientX);
+          const onMouseMove = (ev: MouseEvent) => handleMove(ev.clientX);
+          const onMouseUp = () => {
+            handleEnd();
+            window.removeEventListener("mousemove", onMouseMove);
+            window.removeEventListener("mouseup", onMouseUp);
+          };
+          window.addEventListener("mousemove", onMouseMove);
+          window.addEventListener("mouseup", onMouseUp);
+        }}
+        onClick={handleClick}
+      >
+        <div
+          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+            item.checked
+              ? "border-transparent"
+              : "border-zinc-300 dark:border-zinc-600"
+          }`}
+          style={
+            item.checked ? { backgroundColor: storeColor } : undefined
+          }
+        >
+          {item.checked && (
+            <svg
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <span
+            className={`text-sm font-medium transition-colors ${
+              item.checked
+                ? "line-through text-zinc-400 dark:text-zinc-500"
+                : "text-zinc-900 dark:text-zinc-100"
+            }`}
+          >
+            {item.name}
+          </span>
+          {item.notes && (
+            <span className="block text-xs text-zinc-400 dark:text-zinc-500 truncate">
+              {item.notes}
+            </span>
+          )}
+        </div>
+        <span className="text-xs text-zinc-400 dark:text-zinc-500 shrink-0">
+          {item.quantity} {item.unit}
+        </span>
+      </div>
+    </div>
+  );
 }
 
 export function GroceryList({ initialStores }: { initialStores: Store[] }) {
@@ -42,6 +166,16 @@ export function GroceryList({ initialStores }: { initialStores: Store[] }) {
                   : item
               ),
             }
+          : store
+      )
+    );
+  };
+
+  const deleteItem = (storeId: string, itemId: string) => {
+    setStores((prev) =>
+      prev.map((store) =>
+        store.id === storeId
+          ? { ...store, items: store.items.filter((item) => item.id !== itemId) }
           : store
       )
     );
@@ -221,61 +355,15 @@ export function GroceryList({ initialStores }: { initialStores: Store[] }) {
             <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2 px-1">
               {category}
             </h2>
-            <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-sm divide-y divide-zinc-100 dark:divide-zinc-700">
+            <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-sm divide-y divide-zinc-100 dark:divide-zinc-700 overflow-hidden">
               {categoryItems.map((item) => (
-                <button
+                <SwipeableItem
                   key={item.id}
-                  onClick={() => toggleItem(currentStore.id, item.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-750"
-                >
-                  <div
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                      item.checked
-                        ? "border-transparent"
-                        : "border-zinc-300 dark:border-zinc-600"
-                    }`}
-                    style={
-                      item.checked
-                        ? { backgroundColor: currentStore.color }
-                        : undefined
-                    }
-                  >
-                    {item.checked && (
-                      <svg
-                        className="w-3.5 h-3.5 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={3}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span
-                      className={`text-sm font-medium transition-colors ${
-                        item.checked
-                          ? "line-through text-zinc-400 dark:text-zinc-500"
-                          : "text-zinc-900 dark:text-zinc-100"
-                      }`}
-                    >
-                      {item.name}
-                    </span>
-                    {item.notes && (
-                      <span className="block text-xs text-zinc-400 dark:text-zinc-500 truncate">
-                        {item.notes}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs text-zinc-400 dark:text-zinc-500 shrink-0">
-                    {item.quantity} {item.unit}
-                  </span>
-                </button>
+                  item={item}
+                  storeColor={currentStore.color}
+                  onToggle={() => toggleItem(currentStore.id, item.id)}
+                  onDelete={() => deleteItem(currentStore.id, item.id)}
+                />
               ))}
             </div>
           </div>
